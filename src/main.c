@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 SDL_Window *window = NULL;
 SDL_Surface *screen = NULL;
@@ -15,6 +16,10 @@ SDL_Rect player;
 SDL_Rect player2;
 SDL_Rect Ball;
 bool done = false;
+
+Uint64 now = 0;
+Uint64 last = 0;
+double deltaTime = 0;
 
 void init() {
   SDL_Init(SDL_INIT_EVERYTHING);
@@ -55,9 +60,11 @@ void draw() {
 void gamelogic() {
   while (SDL_PollEvent(&e) != 0) {
     if (e.type == SDL_KEYDOWN) {
-      switch (e.key.keysym.sym) {
-        case SDLK_w:
-          player.y = player.y + 1;
+      if (e.key.keysym.sym == SDLK_w) {
+        player.y = player.y + 1 * deltaTime;
+      }
+      if (e.key.keysym.sym == SDLK_s) {
+        player.y = player.y - 1 * deltaTime;
       }
     } else if (e.type == SDL_QUIT) {
       done = true;
@@ -69,8 +76,11 @@ int main(int arg, char *argv[]) {
   init();
 
   while (!done) {
+    last = now;
+    now = SDL_GetPerformanceCounter();
     gamelogic();
     draw();
+    deltaTime = (double)((now - last) * 1000 / (double)SDL_GetPerformanceFrequency());
   }
 
   return 0;
