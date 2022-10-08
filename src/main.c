@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include "./math.h"
+
 SDL_Window *window = NULL;
 SDL_Surface *screen = NULL;
 SDL_Renderer *renderer;
