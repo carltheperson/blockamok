@@ -17,6 +17,8 @@ typedef struct Point {
 typedef struct {
 } Block;
 
-typedef Point Cube[CUBE_POINTS_N];
+typedef Point* Cube;
 
 void gameFrame(SDL_Event e, float deltaTime);
+
+Cube newCube(Point c, float s);

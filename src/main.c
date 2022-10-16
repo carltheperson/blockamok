@@ -40,6 +40,19 @@ void gameLoop() {
 int main(int arg, char *argv[]) {
   init();
 
+  Point p = {
+      .x = 0.3,
+      .y = 0.5,
+      .z = 10,
+  };
+
+  Cube cube = newCube(p, 3);
+
+  // printf("\n cubes: %f", cube[2]->y);
+  for (int i = 0; i < CUBE_POINTS_N; i++) {
+    printf("\n %f %f %f", cube[i].x, cube[i].y, cube[i].z);
+  }
+
   while (!done) {
     last = now;
     now = SDL_GetPerformanceCounter();
