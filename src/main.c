@@ -11,8 +11,6 @@
 SDL_Window *window = NULL;
 SDL_Surface *screen = NULL;
 SDL_Renderer *renderer;
-const int HEIGHT = 700;
-const int WIDTH = 800;
 SDL_Event e;
 bool done = false;
 
@@ -41,17 +39,12 @@ int main(int arg, char *argv[]) {
   init();
 
   Point p = {
-      .x = 0.3,
-      .y = 0.5,
+      .x = 0,
+      .y = 0,
       .z = 10,
   };
 
-  Cube cube = newCube(p, 3);
-
-  // printf("\n cubes: %f", cube[2]->y);
-  for (int i = 0; i < CUBE_POINTS_N; i++) {
-    printf("\n %f %f %f", cube[i].x, cube[i].y, cube[i].z);
-  }
+  Cube cube = newCube(p, 0.5);
 
   while (!done) {
     last = now;
@@ -60,7 +53,11 @@ int main(int arg, char *argv[]) {
     gameLoop();
     draw(renderer);
 
+    drawCube(renderer, cube);
+
     deltaTime = (double)((now - last) * 1000 / (double)SDL_GetPerformanceFrequency());
+
+    SDL_RenderPresent(renderer);
   }
 
   return 0;

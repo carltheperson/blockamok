@@ -1,3 +1,5 @@
+#pragma once
+
 #include <SDL.h>
 
 #define CUBE_FACE_POINTS_N 4
