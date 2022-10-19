@@ -4,71 +4,83 @@
 
 const unsigned long cubeMemSize = CUBE_POINTS_N * sizeof(Point);
 
+float rr(float min, float max) {
+  return min + (float)rand() / ((float)RAND_MAX / (max - min));
+}
+
 void addNewCube(Cube cubes[], int *cubesLength) {
   Point p = {
-      .x = -0.5,
-      .y = -0.5,
-      .z = 20,
+      .x = rr(-4, 4),
+      .y = rr(-4, 4),
+      .z = rr(5, 30),
   };
 
   Cube cube = newCube(p, 0.5);
   cubes[(*cubesLength)++] = cube;
 }
 
-void removeCube(Cube cubes[], int *cubesLength, int i) {
-  --(*cubesLength);
+void removeCube(Cube cubes[], int i) {
   free(cubes[i]);
+  cubes[i] = NULL;
+}
+
+void rearrangeCubesToTakeOutRemoved(Cube cubes[], int *cubesLength, int removedN) {
+  if (removedN == 0) {
+    return;
+  }
+
+  int fullI = 0;
+  for (int i = 0; i < (*cubesLength); i++) {
+    if (cubes[i] != NULL) {
+      cubes[fullI++] = cubes[i];
+    }
+  }
+
+  (*cubesLength) -= removedN;
+}
+
+int compareSize(const void *a, const void *b) {
+  Cube cube1 = *((Cube *)a);
+  Cube cube2 = *((Cube *)b);
+
+  return (cube1[0].z < cube2[0].z) - (cube1[0].z > cube2[0].z);
 }
 
 void gameFrame(SDL_Event e, float deltaTime, Cube cubes[], int *cubesLength) {
-  float speed = 20 * deltaTime;
-  if ((*cubesLength) == 0) {
+  float speed = 40 * deltaTime;
+  float moveSpeed = 100 * deltaTime;
+  while ((*cubesLength) < 95) {
     addNewCube(cubes, cubesLength);
   }
 
+  int cubesRemoved = 0;
+
+  SDL_Keycode keyE = e.key.keysym.sym;
+
   for (int i = 0; i < (*cubesLength); i++) {
     for (int p = 0; p < 20; p++) {
-      cubes[i][p].z -= speed;
+      if (keyE == SDLK_w) {
+        cubes[i][p].y += moveSpeed;
+      } else if (keyE == SDLK_s) {
+        cubes[i][p].y -= moveSpeed;
+      } else if (keyE == SDLK_a) {
+        cubes[i][p].x += moveSpeed;
+      } else if (keyE == SDLK_d) {
+        cubes[i][p].x -= moveSpeed;
+      } else {
+        cubes[i][p].z -= speed;
+      }
     }
 
-    if (cubes[i][0].z < 1) {
-      removeCube(cubes, cubesLength, i);
+    if (cubes[i][0].z < 1.5) {
+      removeCube(cubes, i);
+      cubesRemoved += 1;
     }
   }
 
-  // if (e.type != SDL_KEYDOWN) {
-  //   return;
-  // }
-  // if (e.key.keysym.sym == SDLK_w) {
-  //   for (int i = 0; i < 24; i++) {
-  //     (*cube)[i].y -= speed;
-  //   }
-  // }
-  // if (e.key.keysym.sym == SDLK_s) {
-  //   for (int i = 0; i < 24; i++) {
-  //     (*cube)[i].y += speed;
-  //   }
-  // }
-  // if (e.key.keysym.sym == SDLK_a) {
-  //   for (int i = 0; i < 24; i++) {
-  //     (*cube)[i].x -= speed;
-  //   }
-  // }
-  // if (e.key.keysym.sym == SDLK_d) {
-  //   for (int i = 0; i < 24; i++) {
-  //     (*cube)[i].x += speed;
-  //   }
-  // }
-  // if (e.key.keysym.sym == SDLK_q) {
-  //   for (int i = 0; i < 24; i++) {
-  //     (*cube)[i].z -= speed;
-  //   }
-  // }
-  // if (e.key.keysym.sym == SDLK_e) {
-  //   for (int i = 0; i < 24; i++) {
-  //     (*cube)[i].z += speed;
-  //   }
-  // }
+  rearrangeCubesToTakeOutRemoved(cubes, cubesLength, cubesRemoved);
+
+  qsort(cubes, *cubesLength, sizeof(Cube *), compareSize);
 }
 
 Cube newCube(Point c, float s) {
