@@ -33,6 +33,16 @@ void gameFrame(SDL_Event e, float deltaTime, Cube *cube) {
       (*cube)[i].x += speed;
     }
   }
+  if (e.key.keysym.sym == SDLK_q) {
+    for (int i = 0; i < 24; i++) {
+      (*cube)[i].z -= speed;
+    }
+  }
+  if (e.key.keysym.sym == SDLK_e) {
+    for (int i = 0; i < 24; i++) {
+      (*cube)[i].z += speed;
+    }
+  }
 }
 
 Cube newCube(Point c, float s) {
@@ -49,28 +59,28 @@ Cube newCube(Point c, float s) {
   */
 
   // Up
-  Point u1 = {.x = -half + c.x, .y = -half + c.y, .z = -half + c.z};
-  Point u2 = {.x = +half + c.x, .y = -half + c.y, .z = -half + c.z};
-  Point u3 = {.x = +half + c.x, .y = -half + c.y, .z = +half + c.z};
-  Point u4 = {.x = -half + c.x, .y = -half + c.y, .z = +half + c.z};
+  Point u1 = {.x = -half + c.x, .y = -half + c.y, .z = +half + c.z};
+  Point u2 = {.x = +half + c.x, .y = -half + c.y, .z = +half + c.z};
+  Point u3 = {.x = +half + c.x, .y = -half + c.y, .z = -half + c.z};
+  Point u4 = {.x = -half + c.x, .y = -half + c.y, .z = -half + c.z};
 
   // Down
-  Point d1 = {.x = -half + c.x, .y = +half + c.y, .z = -half + c.z};
-  Point d2 = {.x = +half + c.x, .y = +half + c.y, .z = -half + c.z};
-  Point d3 = {.x = +half + c.x, .y = +half + c.y, .z = +half + c.z};
-  Point d4 = {.x = -half + c.x, .y = +half + c.y, .z = +half + c.z};
+  Point d1 = {.x = -half + c.x, .y = +half + c.y, .z = +half + c.z};
+  Point d2 = {.x = +half + c.x, .y = +half + c.y, .z = +half + c.z};
+  Point d3 = {.x = +half + c.x, .y = +half + c.y, .z = -half + c.z};
+  Point d4 = {.x = -half + c.x, .y = +half + c.y, .z = -half + c.z};
 
   // Left
-  Point l1 = {.x = -half + c.x, .y = -half + c.y, .z = +half + c.z};
-  Point l2 = {.x = -half + c.x, .y = -half + c.y, .z = -half + c.z};
-  Point l3 = {.x = -half + c.x, .y = +half + c.y, .z = -half + c.z};
-  Point l4 = {.x = -half + c.x, .y = +half + c.y, .z = +half + c.z};
+  Point l1 = {.x = -half + c.x, .y = +half + c.y, .z = +half + c.z};
+  Point l2 = {.x = -half + c.x, .y = -half + c.y, .z = +half + c.z};
+  Point l3 = {.x = -half + c.x, .y = -half + c.y, .z = -half + c.z};
+  Point l4 = {.x = -half + c.x, .y = +half + c.y, .z = -half + c.z};
 
   // Right
   Point r1 = {.x = +half + c.x, .y = +half + c.y, .z = +half + c.z};
-  Point r2 = {.x = +half + c.x, .y = +half + c.y, .z = -half + c.z};
+  Point r2 = {.x = +half + c.x, .y = -half + c.y, .z = +half + c.z};
   Point r3 = {.x = +half + c.x, .y = -half + c.y, .z = -half + c.z};
-  Point r4 = {.x = +half + c.x, .y = -half + c.y, .z = +half + c.z};
+  Point r4 = {.x = +half + c.x, .y = +half + c.y, .z = -half + c.z};
 
   // Front
   Point f1 = {.x = -half + c.x, .y = -half + c.y, .z = -half + c.z};

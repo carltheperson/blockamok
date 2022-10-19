@@ -13,6 +13,10 @@ const int LEFT = 2;
 const int RIGHT = 3;
 const int FRONT = 4;
 
+int TRANSFORMED_FRONT_I = FRONT * 5;
+
+SDL_Point transformedCube[CUBE_POINTS_N + 1];
+
 void draw(SDL_Renderer *renderer) {
   SDL_SetRenderDrawColor(renderer, 15, 255, 155, 255);
   SDL_RenderClear(renderer);
@@ -26,63 +30,20 @@ float screenY(float y) {
   return y * HEIGHT + HEIGHT / 2;
 }
 
+bool isPointOutsideFront(int f, int frontI) {
+  float x = transformedCube[f].x;
+  float y = transformedCube[f].y;
+  float frontStartX = transformedCube[frontI].x;
+  float frontEndX = transformedCube[frontI + 2].x;
+  float frontStartY = transformedCube[frontI].y;
+  float frontEndY = transformedCube[frontI + 2].y;
+  bool outWithX = x < frontStartX || x > frontEndX;
+  bool outWithY = y < frontStartY || y > frontEndY;
+  return outWithX || outWithY;
+}
+
 void drawCube(SDL_Renderer *renderer, Cube cube) {
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-
-  SDL_Point transformedCube[CUBE_POINTS_N + 1];
-
-  // Concerning order of non-front pieces:
-  // If we're above middleY we should draw up last
-  // If we're above middleX we should draw left last
-
-  float middleX = cube[FRONT_I].x + (cube[FRONT_I + 2].x - cube[FRONT_I].x) / 2;
-  float middleY = cube[FRONT_I].y + (cube[FRONT_I + 2].y - cube[FRONT_I].y) / 2;
-
-  bool aboveMiddleX = middleX > 0;
-  bool aboveMiddleY = middleY > 0;
-
-  // Default order: up down left right front
-  // New order: first-left/right last-up/down last-left/right first-up/down  front
-  int faceOrder[5];
-
-  // if (aboveMiddleY) {
-  //   faceOrder[0] = DOWN;
-  //   faceOrder[2] = UP;
-  // } else {
-  //   faceOrder[0] = UP;
-  //   faceOrder[2] = DOWN;
-  // }
-  // if (aboveMiddleX) {
-  //   faceOrder[1] = RIGHT;
-  //   faceOrder[3] = LEFT;
-  // } else {
-  //   faceOrder[1] = LEFT;
-  //   faceOrder[3] = RIGHT;
-  // }
-
-  // if (!aboveMiddleX && !aboveMiddleY) {
-  //   faceOrder[0] = UP;
-  //   faceOrder[1] = LEFT;
-  //   faceOrder[2] = RIGHT;
-  //   faceOrder[3] = DOWN;
-  // } else if (aboveMiddleX && !aboveMiddleY) {
-  //   faceOrder[0] = UP;
-  //   faceOrder[1] = RIGHT;
-  //   faceOrder[2] = LEFT;
-  //   faceOrder[3] = DOWN;
-  // } else if (aboveMiddleX && aboveMiddleY) {
-  //   faceOrder[0] = UP;
-  //   faceOrder[1] = LEFT;
-  //   faceOrder[2] = DOWN;
-  //   faceOrder[3] = RIGHT;
-  // } else if (!aboveMiddleX && aboveMiddleY) {
-  //   faceOrder[0] = UP;
-  //   faceOrder[1] = RIGHT;
-  //   faceOrder[2] = LEFT;
-  //   faceOrder[3] = DOWN;
-  // }
-
-  // faceOrder[4] = FRONT;
 
   for (int f = 0; f < 5; f++) {
     int orgCubeI = f * 4;    // The way our cube is defined, a face has four cornes
@@ -95,8 +56,27 @@ void drawCube(SDL_Renderer *renderer, Cube cube) {
     transformedCube[transCubeI + 4] = transformedCube[transCubeI + 0];
   }
 
-  for (int f = 0; f < 5; f++) {
+  // If a have has at least two points outside of front, it gets to be drawn last
+  int faceOrder[5];
+
+  int lastI = 4;
+  int firstI = 0;
+
+  faceOrder[lastI--] = FRONT;  // Front always gets to be last
+
+  for (int f = 0; f < 4; f++) {
     int cubeI = f * 5;
+    bool sideOutsideFront = isPointOutsideFront(cubeI, FRONT * 5) && isPointOutsideFront(cubeI + 1, FRONT * 5);
+    // If we are outside, we should draw this as last as possible
+    if (sideOutsideFront) {
+      faceOrder[lastI--] = f;
+    } else {
+      faceOrder[firstI++] = f;
+    }
+  }
+
+  for (int f = 0; f < 5; f++) {
+    int cubeI = faceOrder[f] * 5;
 
     SDL_FPoint triable1Points[] = {
         {.x = transformedCube[cubeI + 0].x, .y = transformedCube[cubeI + 0].y},
@@ -112,11 +92,8 @@ void drawCube(SDL_Renderer *renderer, Cube cube) {
 
     SDL_Color color;
 
-    if (f == 4) {
+    if (f == FRONT) {
       SDL_Color c = {.r = 200, .b = 120, .g = 250};
-      color = c;
-    } else if (f == 0 || f == 1) {
-      SDL_Color c = {.r = 50, .b = 120, .g = 250};
       color = c;
     } else {
       SDL_Color c = {.r = 100, .b = 200, .g = 100};

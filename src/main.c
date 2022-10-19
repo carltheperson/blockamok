@@ -42,7 +42,7 @@ int main(int arg, char *argv[]) {
   Point p = {
       .x = -0.5,
       .y = -0.5,
-      .z = 4,
+      .z = 5,
   };
 
   Cube cube = newCube(p, 0.5);
