@@ -25,23 +25,24 @@ void init() {
   screen = SDL_GetWindowSurface(window);
 }
 
-void gameLoop() {
-  while (SDL_PollEvent(&e) != 0) {
-    if (e.type == SDL_KEYDOWN) {
-      gameFrame(e, deltaTime);
-    } else if (e.type == SDL_QUIT) {
-      done = true;
-    }
+void gameLoop(Cube *cube) {
+  SDL_PollEvent(&e);
+  // while ( != 0) {
+  gameFrame(e, deltaTime, cube);
+  if (e.type == SDL_KEYDOWN) {
+  } else if (e.type == SDL_QUIT) {
+    done = true;
   }
+  // }
 }
 
 int main(int arg, char *argv[]) {
   init();
 
   Point p = {
-      .x = 0,
-      .y = 0,
-      .z = 10,
+      .x = -0.5,
+      .y = -0.5,
+      .z = 4,
   };
 
   Cube cube = newCube(p, 0.5);
@@ -50,7 +51,7 @@ int main(int arg, char *argv[]) {
     last = now;
     now = SDL_GetPerformanceCounter();
 
-    gameLoop();
+    gameLoop(&cube);
     draw(renderer);
 
     drawCube(renderer, cube);
