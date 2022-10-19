@@ -10,9 +10,9 @@ float rr(float min, float max) {
 
 void addNewCube(Cube cubes[], int *cubesLength) {
   Point p = {
-      .x = rr(-4, 4),
-      .y = rr(-4, 4),
-      .z = rr(5, 30),
+      .x = rr(-6, 6),
+      .y = rr(-6, 6),
+      .z = rr(30, 50),
   };
 
   Cube cube = newCube(p, 0.5);
@@ -47,28 +47,33 @@ int compareSize(const void *a, const void *b) {
 }
 
 void gameFrame(SDL_Event e, float deltaTime, Cube cubes[], int *cubesLength) {
-  float speed = 40 * deltaTime;
-  float moveSpeed = 100 * deltaTime;
-  while ((*cubesLength) < 95) {
+  float speed = 70 * deltaTime;
+  float moveSpeed = 30 * deltaTime;
+  while ((*cubesLength) < 200) {
     addNewCube(cubes, cubesLength);
   }
 
   int cubesRemoved = 0;
 
-  SDL_Keycode keyE = e.key.keysym.sym;
+  const Uint8 *keyState = SDL_GetKeyboardState(NULL);
 
   for (int i = 0; i < (*cubesLength); i++) {
     for (int p = 0; p < 20; p++) {
-      if (keyE == SDLK_w) {
+      if (keyState[SDL_SCANCODE_W]) {
         cubes[i][p].y += moveSpeed;
-      } else if (keyE == SDLK_s) {
+      }
+      if (keyState[SDL_SCANCODE_S]) {
         cubes[i][p].y -= moveSpeed;
-      } else if (keyE == SDLK_a) {
+      }
+      if (keyState[SDL_SCANCODE_A]) {
         cubes[i][p].x += moveSpeed;
-      } else if (keyE == SDLK_d) {
+      }
+      if (keyState[SDL_SCANCODE_D]) {
         cubes[i][p].x -= moveSpeed;
-      } else {
-        cubes[i][p].z -= speed;
+      }
+      cubes[i][p].z -= speed;
+      if (keyState[SDL_SCANCODE_LSHIFT]) {
+        cubes[i][p].z -= speed * 3;
       }
     }
 

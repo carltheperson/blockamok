@@ -19,7 +19,7 @@ Uint64 last = 0;
 double deltaTime = 0;
 
 int cubesLength = 0;
-Cube cubes[100];
+Cube cubes[1000];
 
 void init() {
   SDL_Init(SDL_INIT_EVERYTHING);
