@@ -2,61 +2,80 @@
 
 #include <SDL.h>
 
-Player player;
+const unsigned long cubeMemSize = CUBE_POINTS_N * sizeof(Point);
 
-void gameFrame(SDL_Event e, float deltaTime, Cube *cube) {
-  // for (int i = 0; i < 24; i++) {
-  //   (*cube)[i].x += 0.001;
-  //   (*cube)[i].y += 0.001;
+void addNewCube(Cube cubes[], int *cubesLength) {
+  Point p = {
+      .x = -0.5,
+      .y = -0.5,
+      .z = 20,
+  };
+
+  Cube cube = newCube(p, 0.5);
+  cubes[(*cubesLength)++] = cube;
+}
+
+void removeCube(Cube cubes[], int *cubesLength, int i) {
+  --(*cubesLength);
+  free(cubes[i]);
+}
+
+void gameFrame(SDL_Event e, float deltaTime, Cube cubes[], int *cubesLength) {
+  float speed = 20 * deltaTime;
+  if ((*cubesLength) == 0) {
+    addNewCube(cubes, cubesLength);
+  }
+
+  for (int i = 0; i < (*cubesLength); i++) {
+    for (int p = 0; p < 20; p++) {
+      cubes[i][p].z -= speed;
+    }
+
+    if (cubes[i][0].z < 1) {
+      removeCube(cubes, cubesLength, i);
+    }
+  }
+
+  // if (e.type != SDL_KEYDOWN) {
+  //   return;
   // }
-  float speed = 0.05;
-  if (e.type != SDL_KEYDOWN) {
-    return;
-  }
-  if (e.key.keysym.sym == SDLK_w) {
-    for (int i = 0; i < 24; i++) {
-      (*cube)[i].y -= speed;
-    }
-  }
-  if (e.key.keysym.sym == SDLK_s) {
-    for (int i = 0; i < 24; i++) {
-      (*cube)[i].y += speed;
-    }
-  }
-  if (e.key.keysym.sym == SDLK_a) {
-    for (int i = 0; i < 24; i++) {
-      (*cube)[i].x -= speed;
-    }
-  }
-  if (e.key.keysym.sym == SDLK_d) {
-    for (int i = 0; i < 24; i++) {
-      (*cube)[i].x += speed;
-    }
-  }
-  if (e.key.keysym.sym == SDLK_q) {
-    for (int i = 0; i < 24; i++) {
-      (*cube)[i].z -= speed;
-    }
-  }
-  if (e.key.keysym.sym == SDLK_e) {
-    for (int i = 0; i < 24; i++) {
-      (*cube)[i].z += speed;
-    }
-  }
+  // if (e.key.keysym.sym == SDLK_w) {
+  //   for (int i = 0; i < 24; i++) {
+  //     (*cube)[i].y -= speed;
+  //   }
+  // }
+  // if (e.key.keysym.sym == SDLK_s) {
+  //   for (int i = 0; i < 24; i++) {
+  //     (*cube)[i].y += speed;
+  //   }
+  // }
+  // if (e.key.keysym.sym == SDLK_a) {
+  //   for (int i = 0; i < 24; i++) {
+  //     (*cube)[i].x -= speed;
+  //   }
+  // }
+  // if (e.key.keysym.sym == SDLK_d) {
+  //   for (int i = 0; i < 24; i++) {
+  //     (*cube)[i].x += speed;
+  //   }
+  // }
+  // if (e.key.keysym.sym == SDLK_q) {
+  //   for (int i = 0; i < 24; i++) {
+  //     (*cube)[i].z -= speed;
+  //   }
+  // }
+  // if (e.key.keysym.sym == SDLK_e) {
+  //   for (int i = 0; i < 24; i++) {
+  //     (*cube)[i].z += speed;
+  //   }
+  // }
 }
 
 Cube newCube(Point c, float s) {
   float half = s / 2.0;
 
   Cube cubeAddr;
-  cubeAddr = malloc(CUBE_POINTS_N * sizeof(Point));
-
-  /*
-  ---> X+
-  |
-  V
-  y+
-  */
+  cubeAddr = malloc(cubeMemSize);
 
   // Up
   Point u1 = {.x = -half + c.x, .y = -half + c.y, .z = +half + c.z};
@@ -88,12 +107,6 @@ Cube newCube(Point c, float s) {
   Point f3 = {.x = +half + c.x, .y = +half + c.y, .z = -half + c.z};
   Point f4 = {.x = -half + c.x, .y = +half + c.y, .z = -half + c.z};
 
-  // Back
-  Point b1 = {.x = -half + c.x, .y = -half + c.y, .z = +half + c.z};
-  Point b2 = {.x = +half + c.x, .y = -half + c.y, .z = +half + c.z};
-  Point b3 = {.x = +half + c.x, .y = +half + c.y, .z = +half + c.z};
-  Point b4 = {.x = -half + c.x, .y = +half + c.y, .z = +half + c.z};
-
   cubeAddr[0] = u1;
   cubeAddr[1] = u2;
   cubeAddr[2] = u3;
@@ -118,11 +131,6 @@ Cube newCube(Point c, float s) {
   cubeAddr[17] = f2;
   cubeAddr[18] = f3;
   cubeAddr[19] = f4;
-
-  cubeAddr[20] = b1;
-  cubeAddr[21] = b2;
-  cubeAddr[22] = b3;
-  cubeAddr[23] = b4;
 
   return cubeAddr;
 }

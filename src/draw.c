@@ -42,6 +42,12 @@ bool isPointOutsideFront(int f, int frontI) {
   return outWithX || outWithY;
 }
 
+void drawCubes(SDL_Renderer *renderer, Cube cubes[], int cubesLength) {
+  for (int i = 0; i < cubesLength; i++) {
+    drawCube(renderer, cubes[i]);
+  }
+}
+
 void drawCube(SDL_Renderer *renderer, Cube cube) {
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 
