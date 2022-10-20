@@ -12,11 +12,18 @@ void addNewCube(Cube cubes[], int *cubesLength) {
   Point p = {
       .x = rr(-6, 6),
       .y = rr(-6, 6),
-      .z = rr(30, 50),
+      // .x = 1,
+      // .y = 1,
+      .z = rr(10, 100),
   };
 
   Cube cube = newCube(p, 0.5);
   cubes[(*cubesLength)++] = cube;
+
+  // for (int i = 0; i < 4; i++) {
+  //   cube[i * 4 + 2].z += 2;
+  //   cube[i * 4 + 3].z += 2;
+  // }
 }
 
 void removeCube(Cube cubes[], int i) {

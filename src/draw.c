@@ -17,9 +17,49 @@ int TRANSFORMED_FRONT_I = FRONT * 5;
 
 SDL_Point transformedCube[CUBE_POINTS_N + 1];
 
+SDL_Color tC1 = {.r = 0, .b = 0, .g = 0, .a = 250 / 3};
+SDL_Color tC2 = {.r = 255, .b = 255, .g = 255, .a = 0};
+
+void drawBackgroundTriangle(SDL_Renderer *renderer, SDL_FPoint trianglePoints[]) {
+  SDL_Vertex triangle[3];
+  triangle[0].position = trianglePoints[0];
+  triangle[1].position = trianglePoints[1];
+  triangle[2].position = trianglePoints[2];
+  triangle[0].color = tC1;
+  triangle[1].color = tC2;
+  triangle[2].color = tC1;
+  SDL_RenderGeometry(renderer, NULL, triangle, 3, NULL, 0);
+}
+
 void draw(SDL_Renderer *renderer) {
   SDL_SetRenderDrawColor(renderer, 15, 255, 155, 255);
+  // SDL_SetRenderDrawColor(renderer, 170, 170, 250, 255);
+  SDL_FPoint triangle1Points[] = {
+      {.x = WIDTH / 2, .y = -HEIGHT},
+      {.x = -WIDTH, .y = HEIGHT / 2},
+      {.x = WIDTH / 2, HEIGHT * 2},
+  };
+  SDL_FPoint triangle2Points[] = {
+      {.x = WIDTH / 2, .y = -HEIGHT},
+      {.x = WIDTH * 2, .y = HEIGHT / 2},
+      {.x = WIDTH / 2, HEIGHT * 2},
+  };
+  SDL_FPoint triangle3Points[] = {
+      {.x = -WIDTH, .y = HEIGHT / 2},
+      {.x = WIDTH / 2, .y = -HEIGHT},
+      {.x = WIDTH * 2, .y = HEIGHT / 2},
+  };
+  SDL_FPoint triangle4Points[] = {
+      {.x = -WIDTH, .y = HEIGHT / 2},
+      {.x = WIDTH / 2, .y = HEIGHT * 2},
+      {.x = WIDTH * 2, .y = HEIGHT / 2},
+  };
+
   SDL_RenderClear(renderer);
+  // drawBackgroundTriangle(renderer, triangle1Points);
+  // drawBackgroundTriangle(renderer, triangle2Points);
+  drawBackgroundTriangle(renderer, triangle3Points);
+  drawBackgroundTriangle(renderer, triangle4Points);
 }
 
 float screenX(float x) {
@@ -105,6 +145,11 @@ void drawCube(SDL_Renderer *renderer, Cube cube) {
       SDL_Color c = {.r = 100, .b = 200, .g = 100};
       color = c;
     }
+    float cF = 1 - (cube[(cubeI / 5) * 4].z / 50) * 0.15;
+    color.r *= cF;
+    color.g *= cF;
+    color.b *= cF;
+    color.a = 255;
 
     SDL_Vertex triangle1[3];
     SDL_Vertex triangle2[3];
