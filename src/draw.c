@@ -33,33 +33,20 @@ void drawBackgroundTriangle(SDL_Renderer *renderer, SDL_FPoint trianglePoints[])
 
 void draw(SDL_Renderer *renderer) {
   SDL_SetRenderDrawColor(renderer, 15, 255, 155, 255);
-  // SDL_SetRenderDrawColor(renderer, 170, 170, 250, 255);
   SDL_FPoint triangle1Points[] = {
-      {.x = WIDTH / 2, .y = -HEIGHT},
       {.x = -WIDTH, .y = HEIGHT / 2},
-      {.x = WIDTH / 2, HEIGHT * 2},
+      {.x = WIDTH / 2, .y = -HEIGHT},
+      {.x = WIDTH * 2, .y = HEIGHT / 2},
   };
   SDL_FPoint triangle2Points[] = {
-      {.x = WIDTH / 2, .y = -HEIGHT},
-      {.x = WIDTH * 2, .y = HEIGHT / 2},
-      {.x = WIDTH / 2, HEIGHT * 2},
-  };
-  SDL_FPoint triangle3Points[] = {
-      {.x = -WIDTH, .y = HEIGHT / 2},
-      {.x = WIDTH / 2, .y = -HEIGHT},
-      {.x = WIDTH * 2, .y = HEIGHT / 2},
-  };
-  SDL_FPoint triangle4Points[] = {
       {.x = -WIDTH, .y = HEIGHT / 2},
       {.x = WIDTH / 2, .y = HEIGHT * 2},
       {.x = WIDTH * 2, .y = HEIGHT / 2},
   };
 
   SDL_RenderClear(renderer);
-  // drawBackgroundTriangle(renderer, triangle1Points);
-  // drawBackgroundTriangle(renderer, triangle2Points);
-  drawBackgroundTriangle(renderer, triangle3Points);
-  drawBackgroundTriangle(renderer, triangle4Points);
+  drawBackgroundTriangle(renderer, triangle1Points);
+  drawBackgroundTriangle(renderer, triangle2Points);
 }
 
 float screenX(float x) {
