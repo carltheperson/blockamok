@@ -133,9 +133,9 @@ void drawCube(SDL_Renderer *renderer, Cube cube) {
       color = c;
     }
     float cF = 1 - (cube[(cubeI / 5) * 4].z / 50) * 0.15;
-    color.r *= cF;
+    color.r *= cF * 1.1;
     color.g *= cF;
-    color.b *= cF;
+    color.b *= cF * 1.1;
     color.a = 255;
 
     SDL_Vertex triangle1[3];
