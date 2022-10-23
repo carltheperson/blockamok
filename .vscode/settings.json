@@ -1,5 +1,9 @@
 {
   "files.associations": {
-    "draw.h": "c"
+    "draw.h": "c",
+    "__config": "c",
+    "__locale": "c",
+    "functional": "c",
+    "algorithm": "c"
   }
 }

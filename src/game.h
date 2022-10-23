@@ -24,6 +24,6 @@ typedef struct {
 
 typedef Point* Cube;
 
-void gameFrame(SDL_Event e, float deltaTime, Cube cubes[], int* cubesLength);
+int gameFrame(SDL_Event e, float deltaTime, Cube cubes[], int* cubesLength);
 
 Cube newCube(Point c, float s);

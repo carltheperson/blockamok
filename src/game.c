@@ -85,7 +85,7 @@ int compareSize(const void *a, const void *b) {
   return (cube1[0].z < cube2[0].z) - (cube1[0].z > cube2[0].z);
 }
 
-void gameFrame(SDL_Event e, float deltaTime, Cube cubes[], int *cubesLength) {
+int gameFrame(SDL_Event e, float deltaTime, Cube cubes[], int *cubesLength) {
   float speed = playerSpeed * deltaTime;
   float moveSpeed = (30 + playerSpeed / 50) * deltaTime;
   if (*cubesLength == 0) {
@@ -135,6 +135,12 @@ void gameFrame(SDL_Event e, float deltaTime, Cube cubes[], int *cubesLength) {
 
         cubes[i][p].z += zSpeed;
       }
+
+      float middleX = fabs(cubes[i][0].x + (cubes[i][2].x - cubes[i][0].x) / 2);
+      float middleY = fabs(cubes[i][0].y + (cubes[i][2].y - cubes[i][0].y) / 2);
+      if (cubes[i][0].z < 2 && middleX < 0.5 && middleY < 0.5) {
+        return 1;
+      }
     }
   }
 
@@ -143,6 +149,8 @@ void gameFrame(SDL_Event e, float deltaTime, Cube cubes[], int *cubesLength) {
   *cubesLength -= cubesRemoved;
 
   qsort(cubes, *cubesLength, sizeof(Cube *), compareSize);
+
+  return 0;
 }
 
 Cube newCube(Point c, float s) {

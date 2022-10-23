@@ -13,7 +13,8 @@ SDL_Window *window = NULL;
 SDL_Surface *screen = NULL;
 SDL_Renderer *renderer;
 SDL_Event e;
-bool done = false;
+bool quit = false;
+bool gameOver = false;
 
 Uint64 now = 0;
 Uint64 last = 0;
@@ -34,44 +35,37 @@ void init() {
 
 void gameLoop() {
   SDL_PollEvent(&e);
-  gameFrame(e, deltaTime, cubes, &cubesLength);
-  if (e.type == SDL_KEYDOWN) {
-  } else if (e.type == SDL_QUIT) {
-    done = true;
+  if (!gameOver) {
+    gameOver = gameFrame(e, deltaTime, cubes, &cubesLength);
+  }
+  if (e.type == SDL_QUIT) {
+    quit = true;
   }
 }
 
 int main(int arg, char *argv[]) {
   init();
 
-  TTF_Font *Sans = TTF_OpenFont("Mono.ttf", 24);
-  SDL_Color White = {255, 255, 255};
-  printf("\n %f \n", playerSpeed);
-  char score[10];
+  // SDL_Color White = {255, 255, 255};
 
-  while (!done) {
+  while (!quit) {
     last = now;
     now = SDL_GetTicks();
 
     gameLoop();
+
     draw(renderer);
 
     drawCubes(renderer, cubes, cubesLength);
 
-    deltaTime = (double)((now - last) * 1000) / ((double)SDL_GetPerformanceFrequency());
-
-    sprintf(score, "%d", (int)playerSpeed);
-    SDL_Surface *surfaceMessage = TTF_RenderText_Solid(Sans, score, White);
-    SDL_Texture *Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
-    SDL_Rect Message_rect;
-    Message_rect.x = 0;
-    Message_rect.y = -10;
-    Message_rect.w = 24 * 3;
-    Message_rect.h = 50;
-    SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
-    SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
+    drawSpeedText(renderer);
+    if (gameOver) {
+      drawGameOverText(renderer);
+    }
 
     SDL_RenderPresent(renderer);
+
+    deltaTime = (double)((now - last) * 1000) / ((double)SDL_GetPerformanceFrequency());
   }
 
   return 0;

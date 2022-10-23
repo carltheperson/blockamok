@@ -14,13 +14,13 @@ const int LEFT = 2;
 const int RIGHT = 3;
 const int FRONT = 4;
 
-// const int BACKGROUND_R = 15;
-// const int BACKGROUND_G = 255;
-// const int BACKGROUND_B = 155;
-
-const int BACKGROUND_R = 0;
+const int BACKGROUND_R = 15;
 const int BACKGROUND_G = 255;
-const int BACKGROUND_B = 195;
+const int BACKGROUND_B = 155;
+
+// const int BACKGROUND_R = 0;
+// const int BACKGROUND_G = 255;
+// const int BACKGROUND_B = 195;
 
 int TRANSFORMED_FRONT_I = FRONT * 5;
 
@@ -28,6 +28,9 @@ SDL_Point transformedCube[CUBE_POINTS_N + 1];
 
 SDL_Color tC1 = {.r = 0, .b = 0, .g = 0, .a = 250 / 3};
 SDL_Color tC2 = {.r = 255, .b = 255, .g = 255, .a = 0};
+
+TTF_Font *Sans = NULL;
+SDL_Color TEXT_COLOR = {0, 0, 0};
 
 void drawBackgroundTriangle(SDL_Renderer *renderer, SDL_FPoint trianglePoints[]) {
   SDL_Vertex triangle[3];
@@ -199,4 +202,31 @@ void drawCube(SDL_Renderer *renderer, Cube cube) {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, fadeTowards(255, 0, fadeAmount));
     SDL_RenderDrawLines(renderer, linePoints, 5);
   }
+}
+
+void drawSpeedText(SDL_Renderer *renderer) {
+  if (Sans == NULL) {
+    Sans = TTF_OpenFont("Mono.ttf", 42);
+  }
+  char score[10];
+  sprintf(score, "%d", (int)playerSpeed);
+  SDL_Surface *surfaceMessage = TTF_RenderText_Solid(Sans, score, TEXT_COLOR);
+  SDL_Texture *Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
+  SDL_Rect Message_rect;
+  Message_rect.x = 0;
+  Message_rect.y = -10;
+  Message_rect.w = 24 * 3;
+  Message_rect.h = 50;
+  SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
+}
+
+void drawGameOverText(SDL_Renderer *renderer) {
+  SDL_Surface *surfaceMessage = TTF_RenderText_Solid(Sans, "GAME OVER", TEXT_COLOR);
+  SDL_Texture *Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
+  SDL_Rect Message_rect;
+  Message_rect.w = 600;
+  Message_rect.h = 150;
+  Message_rect.x = WIDTH / 2 - Message_rect.w / 2;
+  Message_rect.y = HEIGHT / 2 - Message_rect.h / 2 - 10;
+  SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
 }
