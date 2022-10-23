@@ -1,6 +1,7 @@
 #include "./game.h"
 
 #include <SDL.h>
+#include <math.h>
 
 const unsigned long cubeMemSize = CUBE_POINTS_N * sizeof(Point);
 
@@ -30,7 +31,7 @@ float rr(float min, float max) {
 }
 
 void addNewCube(Cube cubes[], int *cubesLength) {
-  float z = rr(60, MAX_DEPTH);
+  float z = MAX_DEPTH;
 
   Point p = {
       .x = rr(-xBounds(z), xBounds(z)),
@@ -38,6 +39,22 @@ void addNewCube(Cube cubes[], int *cubesLength) {
       .z = z,
   };
 
+  Cube cube = newCube(p, 0.5);
+  cubes[(*cubesLength)++] = cube;
+}
+
+void addInitialCube(Cube cubes[], int *cubesLength) {
+  float x, y, z;
+  do {
+    x = rr(-FAR_BOUNDS_X, FAR_BOUNDS_X);
+    y = rr(-FAR_BOUNDS_Y, FAR_BOUNDS_Y);
+    z = rr(0, MAX_DEPTH);
+  } while (fabs(x) > xBounds(z) || fabs(y) > yBounds(z));
+  Point p = {
+      .x = x,
+      .y = y,
+      .z = z,
+  };
   Cube cube = newCube(p, 0.5);
   cubes[(*cubesLength)++] = cube;
 }
@@ -60,24 +77,24 @@ void rearrangeCubesToTakeOutRemoved(Cube cubes[], int *cubesLength, int removedN
   }
 }
 
-void loopBackOutOfBoundsCubes(Cube cubes[], int *cubesLength, int *cubesRemoved) {
-  for (int i = 0; i < *cubesLength; i++) {
-    float cXBounds = xBounds(cubes[i][0].z);
-    if (cubes[i][0].x > cXBounds) {
-      // for (int p = 0; p < 20; p++) {
-      //   cubes[i][p].x -= cXBounds * 2;
-      // }
-      removeCube(cubes, i);
-      *cubesRemoved += 1;
-    } else if (cubes[i][0].x < -cXBounds) {
-      removeCube(cubes, i);
-      *cubesRemoved += 1;
-      // for (int p = 0; p < 20; p++) {
-      //   cubes[i][p].x += cXBounds * 2;
-      // }
-    }
-  }
-}
+// void loopBackOutOfBoundsCubes(Cube cubes[], int *cubesLength, int *cubesRemoved) {
+//   for (int i = 0; i < *cubesLength; i++) {
+//     float cXBounds = xBounds(cubes[i][0].z);
+//     if (cubes[i][0].x > cXBounds) {
+//       // for (int p = 0; p < 20; p++) {
+//       //   cubes[i][p].x -= cXBounds * 2;
+//       // }
+//       removeCube(cubes, i);
+//       *cubesRemoved += 1;
+//     } else if (cubes[i][0].x < -cXBounds) {
+//       removeCube(cubes, i);
+//       *cubesRemoved += 1;
+//       // for (int p = 0; p < 20; p++) {
+//       //   cubes[i][p].x += cXBounds * 2;
+//       // }
+//     }
+//   }
+// }
 
 int removeOrFlipCubeIfOutOfBounds(Cube cubes[], int i, float xDiff, float yDiff, float zDiff) {
   float cXBounds = xBounds(cubes[i][0].z + zDiff);
@@ -129,14 +146,35 @@ int compareSize(const void *a, const void *b) {
   return (cube1[0].z < cube2[0].z) - (cube1[0].z > cube2[0].z);
 }
 
+float timeSinceLastCube = 0;
+int cubesRemovedForDistance = 0;
+
 void gameFrame(SDL_Event e, float deltaTime, Cube cubes[], int *cubesLength) {
   float speed = 70 * deltaTime;
   float moveSpeed = 30 * deltaTime;
-  // if (*cubesLength == 0) {
-  while ((*cubesLength) < 300) {
-    addNewCube(cubes, cubesLength);
+  if (*cubesLength == 0) {
+    while ((*cubesLength) < 300) {
+      addInitialCube(cubes, cubesLength);
+    }
+  } else {
+    // printf("\nDistance %f %f", cubes[*cubesLength - 1][0].z, cubes[0][0].z);
+
+    // if (cubes[0][0].z < MAX_DEPTH * 0.999) {
+    //   for (int i = 0; i < 2; i++) {
+    //     addNewCube(cubes, cubesLength);
+    //   }
+    // }
+
+    for (int i = 0; i < cubesRemovedForDistance + 1; i++) {
+      addNewCube(cubes, cubesLength);
+    }
+    cubesRemovedForDistance = 0;
+
+    // timeSinceLastCube += deltaTime;
+    // printf("\nTime %f", timeSinceLastCube);
+    // if (timeSinceLastCube > 0.01) {
+    // }
   }
-  // }
 
   int cubesRemoved = 0;
 
@@ -162,19 +200,21 @@ void gameFrame(SDL_Event e, float deltaTime, Cube cubes[], int *cubesLength) {
   }
 
   for (int i = 0; i < (*cubesLength); i++) {
-    int removed = removeOrFlipCubeIfOutOfBounds(cubes, i, xDiff, yDiff, zSpeed);
-    if (removed) {
+    if (cubes[i][0].z < 1.5) {
+      removeCube(cubes, i);
       cubesRemoved += 1;
+      cubesRemovedForDistance += 1;
     } else {
-      for (int p = 0; p < 20; p++) {
-        cubes[i][p].x += xDiff;
-        cubes[i][p].y += yDiff;
-
-        cubes[i][p].z += zSpeed;
-      }
-      if (cubes[i][0].z < 1.5) {
-        removeCube(cubes, i);
+      int removed = removeOrFlipCubeIfOutOfBounds(cubes, i, xDiff, yDiff, zSpeed);
+      if (removed) {
         cubesRemoved += 1;
+      } else {
+        for (int p = 0; p < 20; p++) {
+          cubes[i][p].x += xDiff;
+          cubes[i][p].y += yDiff;
+
+          cubes[i][p].z += zSpeed;
+        }
       }
     }
   }
