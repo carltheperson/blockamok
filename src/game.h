@@ -2,12 +2,12 @@
 
 #include <SDL.h>
 
-#include "./game.h"
-
 #define CUBE_FACE_POINTS_N 4
 #define CUBE_FACE_N 6
 #define CUBE_POINTS_N 24  // 6 * 4
 #define FRONT_I 16        // 4 * 4
+
+extern float playerSpeed;
 
 typedef struct {
   float z;

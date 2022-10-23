@@ -46,6 +46,8 @@ int main(int arg, char *argv[]) {
 
   TTF_Font *Sans = TTF_OpenFont("Mono.ttf", 24);
   SDL_Color White = {255, 255, 255};
+  printf("\n %f \n", playerSpeed);
+  char score[10];
 
   while (!done) {
     last = now;
@@ -58,7 +60,8 @@ int main(int arg, char *argv[]) {
 
     deltaTime = (double)((now - last) * 1000) / ((double)SDL_GetPerformanceFrequency());
 
-    SDL_Surface *surfaceMessage = TTF_RenderText_Solid(Sans, "100", White);
+    sprintf(score, "%d", (int)playerSpeed);
+    SDL_Surface *surfaceMessage = TTF_RenderText_Solid(Sans, score, White);
     SDL_Texture *Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
     SDL_Rect Message_rect;
     Message_rect.x = 0;

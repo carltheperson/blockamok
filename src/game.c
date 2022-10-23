@@ -3,6 +3,8 @@
 #include <SDL.h>
 #include <math.h>
 
+float playerSpeed = 100;
+
 const unsigned long cubeMemSize = CUBE_POINTS_N * sizeof(Point);
 
 const float MAX_DEPTH = 150;
@@ -83,11 +85,9 @@ int compareSize(const void *a, const void *b) {
   return (cube1[0].z < cube2[0].z) - (cube1[0].z > cube2[0].z);
 }
 
-float speedMod = 100;
-
 void gameFrame(SDL_Event e, float deltaTime, Cube cubes[], int *cubesLength) {
-  float speed = speedMod * deltaTime;
-  float moveSpeed = (30 + speedMod / 50) * deltaTime;
+  float speed = playerSpeed * deltaTime;
+  float moveSpeed = (30 + playerSpeed / 50) * deltaTime;
   if (*cubesLength == 0) {
     while ((*cubesLength) < 600) {
       addInitialCube(cubes, cubesLength);
@@ -98,8 +98,7 @@ void gameFrame(SDL_Event e, float deltaTime, Cube cubes[], int *cubesLength) {
     }
   }
 
-  speedMod += deltaTime * 300;
-  printf("\n %f", speedMod);
+  playerSpeed += deltaTime * 300;
 
   int cubesRemoved = 0;
 
