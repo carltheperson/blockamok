@@ -76,21 +76,30 @@ int compareSize(const void *a, const void *b) {
   Cube cube1 = *((Cube *)a);
   Cube cube2 = *((Cube *)b);
 
+  if (cube1[0].z == cube2[0].z) {
+    return (cube1[0].x < cube2[0].x) - (cube1[0].x > cube2[0].x);
+  }
+
   return (cube1[0].z < cube2[0].z) - (cube1[0].z > cube2[0].z);
 }
 
+float speedMod = 100;
+
 void gameFrame(SDL_Event e, float deltaTime, Cube cubes[], int *cubesLength) {
-  float speed = 100 * deltaTime;
-  float moveSpeed = 30 * deltaTime;
+  float speed = speedMod * deltaTime;
+  float moveSpeed = (30 + speedMod / 50) * deltaTime;
   if (*cubesLength == 0) {
-    while ((*cubesLength) < 500) {
+    while ((*cubesLength) < 600) {
       addInitialCube(cubes, cubesLength);
     }
   } else {
-    while ((*cubesLength) < 500) {
+    while ((*cubesLength) < 600) {
       addNewCube(cubes, cubesLength);
     }
   }
+
+  speedMod += deltaTime * 300;
+  printf("\n %f", speedMod);
 
   int cubesRemoved = 0;
 
@@ -116,7 +125,7 @@ void gameFrame(SDL_Event e, float deltaTime, Cube cubes[], int *cubesLength) {
   }
 
   for (int i = 0; i < (*cubesLength); i++) {
-    if (cubes[i][0].z < 1.5) {
+    if ((cubes[i][0].z + zSpeed) < 1.5) {
       removeCube(cubes, i);
       cubesRemoved += 1;
     } else {

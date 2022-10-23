@@ -1,4 +1,5 @@
 #include <SDL.h>
+#include <SDL_ttf.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -28,6 +29,7 @@ void init() {
   screen = SDL_GetWindowSurface(window);
   SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
   srand(time(NULL));
+  TTF_Init();
 }
 
 void gameLoop() {
@@ -42,6 +44,9 @@ void gameLoop() {
 int main(int arg, char *argv[]) {
   init();
 
+  TTF_Font *Sans = TTF_OpenFont("Mono.ttf", 24);
+  SDL_Color White = {255, 255, 255};
+
   while (!done) {
     last = now;
     now = SDL_GetTicks();
@@ -51,7 +56,17 @@ int main(int arg, char *argv[]) {
 
     drawCubes(renderer, cubes, cubesLength);
 
-    deltaTime = (double)((now - last) * 1000 / (double)SDL_GetPerformanceFrequency());
+    deltaTime = (double)((now - last) * 1000) / ((double)SDL_GetPerformanceFrequency());
+
+    SDL_Surface *surfaceMessage = TTF_RenderText_Solid(Sans, "100", White);
+    SDL_Texture *Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
+    SDL_Rect Message_rect;
+    Message_rect.x = 0;
+    Message_rect.y = -10;
+    Message_rect.w = 24 * 3;
+    Message_rect.h = 50;
+    SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
+    SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
 
     SDL_RenderPresent(renderer);
   }
