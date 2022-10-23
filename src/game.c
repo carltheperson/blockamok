@@ -6,6 +6,7 @@
 #include "./math.h"
 
 const float PLAYER_INITIAL_SPEED = 100;
+const float BASE_TURN_SPEED = 30;
 
 const int CUBE_AMOUNT = 600;
 
@@ -88,21 +89,19 @@ void flipCubeIfOutOfBounds(Cube cubes[], int i) {
 int compareSize(const void *a, const void *b) {
   Cube cube1 = *((Cube *)a);
   Cube cube2 = *((Cube *)b);
-
   if (cube1[0].z == cube2[0].z) {
     return (cube1[0].x < cube2[0].x) - (cube1[0].x > cube2[0].x);
   }
-
   return (cube1[0].z < cube2[0].z) - (cube1[0].z > cube2[0].z);
 }
 
-int gameFrame(SDL_Event e, float deltaTime, Cube cubes[], int *cubesLength) {
+int gameFrame(float deltaTime, Cube cubes[], int *cubesLength) {
   while (*cubesLength < CUBE_AMOUNT) {
     addNewCube(cubes, cubesLength);
   }
 
   float speed = playerSpeed * deltaTime;
-  float moveSpeed = (30 + playerSpeed / 50) * deltaTime;
+  float turnSpeed = (BASE_TURN_SPEED + playerSpeed / 50) * deltaTime;
 
   playerSpeed += deltaTime * 300;
 
@@ -113,16 +112,16 @@ int gameFrame(SDL_Event e, float deltaTime, Cube cubes[], int *cubesLength) {
   float xDiff = 0;
   float yDiff = 0;
   if (keyState[SDL_SCANCODE_W]) {
-    yDiff = +moveSpeed;
+    yDiff = +turnSpeed;
   }
   if (keyState[SDL_SCANCODE_S]) {
-    yDiff = -moveSpeed;
+    yDiff = -turnSpeed;
   }
   if (keyState[SDL_SCANCODE_A]) {
-    xDiff = +moveSpeed;
+    xDiff = +turnSpeed;
   }
   if (keyState[SDL_SCANCODE_D]) {
-    xDiff = -moveSpeed;
+    xDiff = -turnSpeed;
   }
   float zSpeed = -speed;
   if (keyState[SDL_SCANCODE_LSHIFT]) {

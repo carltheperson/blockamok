@@ -22,8 +22,8 @@ int TRANSFORMED_FRONT_I = FRONT * 5;
 
 SDL_Point transformedCube[CUBE_FACE_N * 5];
 
-SDL_Color tC1 = {.r = 0, .b = 0, .g = 0, .a = 250 / 3};
-SDL_Color tC2 = {.r = 255, .b = 255, .g = 255, .a = 0};
+SDL_Color darkBackgroundTriangle = {.r = 0, .b = 0, .g = 0, .a = 250 / 3};
+SDL_Color emptyBackgroundTriangle = {.r = 255, .b = 255, .g = 255, .a = 0};
 
 TTF_Font *Sans = NULL;
 SDL_Color TEXT_COLOR = {0, 0, 0};
@@ -33,9 +33,9 @@ void drawBackgroundTriangle(SDL_Renderer *renderer, SDL_FPoint trianglePoints[])
   triangle[0].position = trianglePoints[0];
   triangle[1].position = trianglePoints[1];
   triangle[2].position = trianglePoints[2];
-  triangle[0].color = tC1;
-  triangle[1].color = tC2;
-  triangle[2].color = tC1;
+  triangle[0].color = darkBackgroundTriangle;
+  triangle[1].color = emptyBackgroundTriangle;
+  triangle[2].color = darkBackgroundTriangle;
   SDL_RenderGeometry(renderer, NULL, triangle, 3, NULL, 0);
 }
 

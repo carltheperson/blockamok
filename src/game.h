@@ -4,7 +4,7 @@
 
 #define CUBE_FACE_POINTS_N 4
 #define CUBE_FACE_N 5
-#define CUBE_POINTS_N 20  // 6 * 4
+#define CUBE_POINTS_N 20  // 5 * 4
 #define FRONT_I 16        // 4 * 4
 
 extern float playerSpeed;
@@ -24,7 +24,7 @@ typedef struct {
 
 typedef Point* Cube;
 
-int gameFrame(SDL_Event e, float deltaTime, Cube cubes[], int* cubesLength);
+int gameFrame(float deltaTime, Cube cubes[], int* cubesLength);
 
 void gameInit(Cube cubes[], int* cubesLength);
 

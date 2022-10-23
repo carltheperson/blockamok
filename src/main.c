@@ -37,7 +37,7 @@ void init() {
 void gameLoop() {
   SDL_PollEvent(&e);
   if (!gameOver) {
-    gameOver = gameFrame(e, deltaTime, cubes, &cubesLength);
+    gameOver = gameFrame(deltaTime, cubes, &cubesLength);
   }
   if (e.type == SDL_QUIT) {
     quit = true;
