@@ -2,8 +2,8 @@
 
 #include "./game.h"
 
-#define WIDTH 800
-#define HEIGHT 800
+#define WIDTH 1000
+#define HEIGHT 1000
 
 void draw(SDL_Renderer *renderer);
 

@@ -1,5 +1,7 @@
 <h1 align="center">Blockamok</h1>
 
+<p align="center">You accidentally fly your spaceship into a wormhole. To your shock, you find yourself in an alternate dimension filled with blocks. The throttle on your spaceship is broken and keeps increasing the speed. How far can you make it?</p>
+
 # Compiling
 
 Linking the SDL_2 library can be a bit of a challenge. I recommend you find out yourself how to do that for your system. Here is what worked on my mac with `homebrew`:
@@ -15,7 +17,7 @@ gcc src/*.c $(sdl2-config --cflags --libs) -o blockamok && ./blockamok
 gcc src/**/*.c  -I/opt/homebrew/include/SDL2 -D_THREAD_SAFE -L/opt/homebrew/lib -lSDL2 -o blockamok
 ````
 
-Get compiler flags pkg-config --cflags --libs SDL2_ttf
+Get compiler flags: pkg-config --cflags --libs SDL2_ttf
 
 # Running
 

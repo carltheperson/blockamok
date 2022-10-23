@@ -31,6 +31,7 @@ void init() {
   SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
   srand(time(NULL));
   TTF_Init();
+  gameInit(cubes, &cubesLength);
 }
 
 void gameLoop() {
@@ -45,8 +46,6 @@ void gameLoop() {
 
 int main(int arg, char *argv[]) {
   init();
-
-  // SDL_Color White = {255, 255, 255};
 
   while (!quit) {
     last = now;

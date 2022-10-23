@@ -3,7 +3,11 @@
 #include <SDL.h>
 #include <math.h>
 
-float playerSpeed = 100;
+#include "./math.h"
+
+const float PLAYER_INITIAL_SPEED = 100;
+
+const int CUBE_AMOUNT = 600;
 
 const unsigned long cubeMemSize = CUBE_POINTS_N * sizeof(Point);
 
@@ -11,28 +15,35 @@ const float MAX_DEPTH = 150;
 const float BOUNDS_X = 12;
 const float BOUNDS_Y = 12;
 
-float rr(float min, float max) {
-  return min + (float)rand() / ((float)RAND_MAX / (max - min));
-}
+const float CUBE_SIZE = 0.5;
+
+float playerSpeed;
 
 void addNewCube(Cube cubes[], int *cubesLength) {
   Point p = {
-      .x = rr(-BOUNDS_X, BOUNDS_X),
-      .y = rr(-BOUNDS_Y, BOUNDS_Y),
+      .x = randF(-BOUNDS_X, BOUNDS_X),
+      .y = randF(-BOUNDS_Y, BOUNDS_Y),
       .z = MAX_DEPTH,
   };
-  Cube cube = newCube(p, 0.5);
+  Cube cube = newCube(p, CUBE_SIZE);
   cubes[(*cubesLength)++] = cube;
 }
 
 void addInitialCube(Cube cubes[], int *cubesLength) {
   Point p = {
-      .x = rr(-BOUNDS_X, BOUNDS_X),
-      .y = rr(-BOUNDS_Y, BOUNDS_Y),
-      .z = rr(0, MAX_DEPTH),
+      .x = randF(-BOUNDS_X, BOUNDS_X),
+      .y = randF(-BOUNDS_Y, BOUNDS_Y),
+      .z = randF(0, MAX_DEPTH),
   };
-  Cube cube = newCube(p, 0.5);
+  Cube cube = newCube(p, CUBE_SIZE);
   cubes[(*cubesLength)++] = cube;
+}
+
+void gameInit(Cube cubes[], int *cubesLength) {
+  playerSpeed = PLAYER_INITIAL_SPEED;
+  while ((*cubesLength) < CUBE_AMOUNT) {
+    addInitialCube(cubes, cubesLength);
+  }
 }
 
 void removeCube(Cube cubes[], int i) {
@@ -86,17 +97,12 @@ int compareSize(const void *a, const void *b) {
 }
 
 int gameFrame(SDL_Event e, float deltaTime, Cube cubes[], int *cubesLength) {
+  while (*cubesLength < CUBE_AMOUNT) {
+    addNewCube(cubes, cubesLength);
+  }
+
   float speed = playerSpeed * deltaTime;
   float moveSpeed = (30 + playerSpeed / 50) * deltaTime;
-  if (*cubesLength == 0) {
-    while ((*cubesLength) < 600) {
-      addInitialCube(cubes, cubesLength);
-    }
-  } else {
-    while ((*cubesLength) < 600) {
-      addNewCube(cubes, cubesLength);
-    }
-  }
 
   playerSpeed += deltaTime * 300;
 
