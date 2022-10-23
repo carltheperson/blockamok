@@ -5,9 +5,9 @@
 
 const unsigned long cubeMemSize = CUBE_POINTS_N * sizeof(Point);
 
-const float MAX_DEPTH = 200;
-const float BOUNDS_X = 15;
-const float BOUNDS_Y = 15;
+const float MAX_DEPTH = 150;
+const float BOUNDS_X = 12;
+const float BOUNDS_Y = 12;
 
 float rr(float min, float max) {
   return min + (float)rand() / ((float)RAND_MAX / (max - min));
@@ -80,7 +80,7 @@ int compareSize(const void *a, const void *b) {
 }
 
 void gameFrame(SDL_Event e, float deltaTime, Cube cubes[], int *cubesLength) {
-  float speed = 70 * deltaTime;
+  float speed = 100 * deltaTime;
   float moveSpeed = 30 * deltaTime;
   if (*cubesLength == 0) {
     while ((*cubesLength) < 500) {

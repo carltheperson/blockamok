@@ -13,6 +13,14 @@ const int LEFT = 2;
 const int RIGHT = 3;
 const int FRONT = 4;
 
+// const int BACKGROUND_R = 15;
+// const int BACKGROUND_G = 255;
+// const int BACKGROUND_B = 155;
+
+const int BACKGROUND_R = 0;
+const int BACKGROUND_G = 255;
+const int BACKGROUND_B = 195;
+
 int TRANSFORMED_FRONT_I = FRONT * 5;
 
 SDL_Point transformedCube[CUBE_POINTS_N + 1];
@@ -32,7 +40,7 @@ void drawBackgroundTriangle(SDL_Renderer *renderer, SDL_FPoint trianglePoints[])
 }
 
 void draw(SDL_Renderer *renderer) {
-  SDL_SetRenderDrawColor(renderer, 15, 255, 155, 255);
+  SDL_SetRenderDrawColor(renderer, BACKGROUND_R, BACKGROUND_G, BACKGROUND_B, 255);
   SDL_FPoint triangle1Points[] = {
       {.x = -WIDTH, .y = HEIGHT / 2},
       {.x = WIDTH / 2, .y = -HEIGHT},
@@ -75,9 +83,19 @@ void drawCubes(SDL_Renderer *renderer, Cube cubes[], int cubesLength) {
   }
 }
 
-void drawCube(SDL_Renderer *renderer, Cube cube) {
-  SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+float fadeTowards(float current, float target, float amount) {
+  if (current == target) {
+    return current;
+  }
+  float toDiff = fabs((current - target) * amount);
+  if (current > target) {
+    return current - toDiff;
+  } else {
+    return current + toDiff;
+  }
+}
 
+void drawCube(SDL_Renderer *renderer, Cube cube) {
   for (int f = 0; f < 5; f++) {
     int orgCubeI = f * 4;    // The way our cube is defined, a face has four cornes
     int transCubeI = f * 5;  // The way our transformed cube is defined, a face has 5 corners (last one connects back to the firt one)
@@ -132,11 +150,20 @@ void drawCube(SDL_Renderer *renderer, Cube cube) {
       SDL_Color c = {.r = 100, .b = 200, .g = 100};
       color = c;
     }
-    float cF = 1 - (cube[(cubeI / 5) * 4].z / 50) * 0.15;
-    color.r *= cF * 1.1;
-    color.g *= cF;
-    color.b *= cF * 1.1;
-    color.a = 255;
+
+    float min = 150;
+    float max = 190;
+
+    float z = (cube[(cubeI / 5) * 4].z) + fabs(cube[(cubeI / 5) * 4].x) * 7 + fabs(cube[(cubeI / 5) * 4].y) * 7;
+    float fadeAmount = z < min ? 0 : fmin((z - min) / (max - min), 1);
+
+    // color.r = fadeTowards(color.r, BACKGROUND_R, fadeAmount);
+    // color.g = fadeTowards(color.g, BACKGROUND_G, fadeAmount);
+    // color.b = fadeTowards(color.b, BACKGROUND_B, fadeAmount);
+    color.r = color.r;
+    color.g = color.g;
+    color.b = color.b;
+    color.a = fadeTowards(255, 0, fadeAmount);
 
     SDL_Vertex triangle1[3];
     SDL_Vertex triangle2[3];
@@ -166,6 +193,9 @@ void drawCube(SDL_Renderer *renderer, Cube cube) {
 
     SDL_RenderGeometry(renderer, NULL, triangle1, 3, NULL, 0);
     SDL_RenderGeometry(renderer, NULL, triangle2, 3, NULL, 0);
+    fadeAmount = fmin(fadeAmount * 1.5, 1);
+    // SDL_SetRenderDrawColor(renderer, fadeTowards(0, BACKGROUND_R, fadeAmount), fadeTowards(0, BACKGROUND_G, fadeAmount), fadeTowards(0, BACKGROUND_B, fadeAmount), 255);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, fadeTowards(255, 0, fadeAmount));
     SDL_RenderDrawLines(renderer, linePoints, 5);
   }
 }
