@@ -2,24 +2,31 @@
 
 <p align="center">You accidentally fly your spaceship into a wormhole. To your shock, you find yourself in an alternate dimension filled with blocks. The throttle on your spaceship is broken and keeps increasing the speed. How far can you make it?</p>
 
-# Compiling
+# Installing dependencies
 
-Linking the SDL_2 library can be a bit of a challenge. I recommend you find out yourself how to do that for your system. Here is what worked on my mac with `homebrew`:
+You need: `sdl2`, `sdl2_ttf`, and `pkg-config` (to generate compiler flags)
 
-brew install sdl2
-brew install sdl2_ttf
-brew install pkg-config
-
-````
+If you use Homebrew, you can run this:
 
 ```sh
-gcc src/*.c $(sdl2-config --cflags --libs) -o blockamok && ./blockamok
-gcc src/**/*.c  -I/opt/homebrew/include/SDL2 -D_THREAD_SAFE -L/opt/homebrew/lib -lSDL2 -o blockamok
-````
+make install_dependencies_mac
+```
 
-Get compiler flags: pkg-config --cflags --libs SDL2_ttf
+# Compiling
+
+```sh
+make compile
+```
+
+Note: If this fails, make sure that the following line generates a bunch of compiler flags: `pkg-config --cflags --libs SDL2_ttf`
 
 # Running
+
+```sh
+make run
+```
+
+Or:
 
 ```sh
 ./blockamok
@@ -30,14 +37,11 @@ Get compiler flags: pkg-config --cflags --libs SDL2_ttf
 A quick way to give VS Code knowledge of the SDL library is this (for my mac):
 
 ```sh
-mkdir include && cp /opt/homebrew/include/SDL2/* ./include/
-cp /opt/homebrew/opt/sdl_ttf/include/SDL/* ./include/
+make satisfy_vscode_mac
 ```
+
+This will add the dependencies to `./include`
 
 # License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-gcc src/\*.c `sdl2-configs --cflags --libs` -I/opt/homebrew/opt/sdl_ttf/include/SDL -lSDL2_ttf -o blockamok && ./blockamok
-
-gcc src/\*_/_.c -D_THREAD_SAFE -I/opt/homebrew/include/SDL2 -I/opt/homebrew/Cellar/harfbuzz/5.3.1/include/harfbuzz -I/opt/homebrew/Cellar/graphite2/1.3.14/include -I/opt/homebrew/Cellar/glib/2.74.0/include/glib-2.0 -I/opt/homebrew/Cellar/glib/2.74.0/lib/glib-2.0/include -I/opt/homebrew/opt/gettext/include -I/opt/homebrew/Cellar/pcre2/10.40/include -I/opt/homebrew/opt/freetype/include/freetype2 -I/opt/homebrew/include -I/opt/homebrew/include/SDL2 -L/opt/homebrew/Cellar/sdl2_ttf/2.20.1/lib -L/opt/homebrew/lib -lSDL2_ttf -lSDL2 -o blockamok
