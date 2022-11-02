@@ -2,6 +2,8 @@
 
 <p align="center">You accidentally fly your spaceship into a wormhole. To your shock, you find yourself in an alternate dimension filled with blocks. The throttle on your spaceship is broken and keeps increasing the speed. How far can you make it?</p>
 
+![](gameplay.mp4)
+
 # Installing dependencies
 
 You need: `sdl2`, `sdl2_ttf`, and `pkg-config` (to generate compiler flags)
