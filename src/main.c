@@ -64,7 +64,7 @@ int main(int arg, char *argv[]) {
 
     SDL_RenderPresent(renderer);
 
-    deltaTime = (double)((now - last) * 1000) / ((double)SDL_GetPerformanceFrequency());
+    deltaTime = (double)((now - last)) / 12000;
   }
 
   return 0;
