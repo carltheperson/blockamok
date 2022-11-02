@@ -1,6 +1,6 @@
 <h1 align="center">Blockamok</h1>
 
-<p align="center"><b>A CPU-only, from-scratch 3D game written in C where you attempt to dodge strange-looking blocks</b></p>
+<p align="center"><b>A CPU-only, from-scratch 3D game written in C where you dodge blocks</b></p>
 
 <p align="center">You accidentally fly your spaceship into a wormhole. To your shock, you find yourself in an alternate dimension filled with blocks. The throttle on your spaceship is broken and keeps increasing the speed. How far can you make it?</p>
 
