@@ -2,7 +2,7 @@
 
 <p align="center">You accidentally fly your spaceship into a wormhole. To your shock, you find yourself in an alternate dimension filled with blocks. The throttle on your spaceship is broken and keeps increasing the speed. How far can you make it?</p>
 
-![](gameplay.mp4)
+<img alt="Gameplay" src="gameplay.gif" align="center" />
 
 # Installing dependencies
 
