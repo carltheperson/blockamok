@@ -15,6 +15,7 @@ const unsigned long cubeMemSize = CUBE_POINTS_N * sizeof(Point);
 const float MAX_DEPTH = 150;
 const float BOUNDS_X = 12;
 const float BOUNDS_Y = 12;
+const float SPEED_INCREASE = 350;
 
 const float CUBE_SIZE = 0.5;
 
@@ -103,7 +104,7 @@ int gameFrame(float deltaTime, Cube cubes[], int *cubesLength) {
   float speed = playerSpeed * deltaTime;
   float turnSpeed = (BASE_TURN_SPEED + playerSpeed / 50) * deltaTime;
 
-  playerSpeed += deltaTime * 300;
+  playerSpeed += deltaTime * SPEED_INCREASE;
 
   int cubesRemoved = 0;
 
