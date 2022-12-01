@@ -97,7 +97,7 @@ float fadeTowards(float current, float target, float amount) {
 
 void drawCube(SDL_Renderer *renderer, Cube cube) {
   for (int f = 0; f < 5; f++) {
-    int orgCubeI = f * 4;    // The way our cube is defined, a face has four cornes
+    int orgCubeI = f * 4;    // The way our cube is defined, a face has four corners
     int transCubeI = f * 5;  // The way our transformed cube is defined, a face has 5 corners (last one connects back to the firt one)
     for (int p = 0; p < 4; p++) {
       Point point = cube[orgCubeI + p];
